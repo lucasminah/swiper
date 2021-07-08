@@ -843,6 +843,10 @@ selection, non-nil otherwise."
 
 (defvar set-message-function)
 
+(defcustom ivy-read-action-cancel-keys '("ESC" "C-g" "M-o")
+  "List of keys to quit from ivy actions selection list."
+  :type '(repeat key-sequence))
+
 (defun ivy-read-action-by-key (actions)
   (let* ((set-message-function nil)
          (hint (funcall ivy-read-action-format-function (cdr actions)))
@@ -856,7 +860,7 @@ selection, non-nil otherwise."
                 (not (string= key (car (nth action-idx (cdr actions))))))
       (setq key (concat key (key-description (vector (read-key hint))))))
     (ivy-shrink-after-dispatching)
-    (cond ((member key '("ESC" "C-g" "M-o"))
+    (cond ((member key ivy-read-action-cancel-keys)
            nil)
           ((null action-idx)
            (message "%s is not bound" key)
